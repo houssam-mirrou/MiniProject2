@@ -10,24 +10,26 @@
 #define CYN "\e[0;36m"
 #define WHT "\e[0;37m"
 #define reset "\e[0m"
-#define COL_WIDTH 12
+
+
+int col_width=12;
 
 void print_header_footer(){
     int i=0;
     printf("*");
-	for(i=0;i<COL_WIDTH+4;i++){
+	for(i=0;i<col_width+4;i++){
 		printf("*");
 	}
 	printf("*");
-	for(i=0;i<COL_WIDTH+3;i++){
+	for(i=0;i<col_width+3;i++){
 		printf("*");
 	}
 	printf("*");
-	for(i=0;i<COL_WIDTH+3;i++){
+	for(i=0;i<col_width+3;i++){
 		printf("*");
 	}
     printf("*");
-	for(i=0;i<COL_WIDTH+3;i++){
+	for(i=0;i<col_width+3;i++){
 	    printf("*");
 	}
 	printf("*\n");
@@ -41,9 +43,10 @@ typedef struct contact {
 } contact ; 
 
 void print_value(contact cont){
-    printf("** %-*s ** %-*s ** %-s **\n", 12, cont.nom,
-        12, cont.adress,
-        12, cont.numero);
+    
+    printf("** %-*s ** %-*s ** %-*s **\n", col_width, cont.nom,
+        col_width, cont.adress,
+        col_width, cont.numero);
 }
 
 int contact_trouv(contact cont[] ,int n,char nm[]){
@@ -149,7 +152,7 @@ void rechercher_contact(contact cont[],int n,char nm[]){
             t=1;
         }
     }
-    if(t==1){
+    if(t==0){
         printf("***************************************************************\n");
         printf("**     le contact n'existe pas dans la list de contact !!    **\n");
         printf("***************************************************************\n");
@@ -216,11 +219,10 @@ void main_2(){
 					break;
 				}
                 printf(GRN);
+             
                 print_header_footer();
-                printf("ksjdfqdsfqsdf\n");
-                print_value(cont[0]);
                 for(i=0;i<n;i++){
-                    print_value(cont[i]);
+                     print_value(cont[i]);
                 }
                 print_header_footer();
                 printf("Appuyer sur entrer ! "reset);
@@ -231,7 +233,7 @@ void main_2(){
             case 3 :
                 printf(YEL"donner le contact a rechercher : ");
 				scanf("%s",rech_nom);
-				printf("\n"reset);
+				printf("\n");
                 rechercher_contact(cont,n,rech_nom);
                 printf("Appuyer sur entrer ! "reset);
 				getchar();
