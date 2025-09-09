@@ -184,6 +184,59 @@ int ajouter_contact(contact cont[],int n){
     return n;
 }
 
+int ajout_multiple_contact(contact cont[] , int n){
+    int nbr = 0 ;
+    do {
+        printf("Donner le nombre du contact a ajouter : ");
+        scanf("%d" , &nbr);
+
+    } while(nbr<0);
+    while(nbr>0){
+        char nm[30];
+        printf("Donner le nom du contact              : ");
+        scanf("%s",nm);
+        int d = recherche_idx(cont,n,nm);
+        if (d!=-1){
+            print_title("Le contact est deja ajouter dans le list tu peut le modifier !!");
+        }
+        else{
+            strcpy(cont[n].nom,nm);
+            do {
+                printf("Donner le numero du contact              : ");
+                scanf("%s",cont[n].numero);
+                printf("Donner le adress du contact              : ");
+                scanf("%s",cont[n].adress);
+            } while(verif_adress(cont[n].adress) == 0 || verif_numero(cont[n].numero) == 0);
+            n++;
+            print_title("Le Contact a ete ajouter avec succee.");
+        }
+        nbr--;
+    }
+    return n;
+}
+
+int fenetre_ajout(contact cont[] , int n){
+    system("cls");
+    print_header_footer();
+    print_title2("1. Ajouter un seul contact :",GRN);
+    print_title2("2. Ajouter multiple contact :",MAG);
+    print_header_footer();
+    int choix = 0;
+    do {
+        printf("Donner Votre choix : ");
+        scanf("%d",&choix);
+    } while(choix <1 && choix >2);
+    switch (choix){
+        case 1:
+            n=ajouter_contact(cont,n);
+            break;
+        case 2 :
+            n=ajout_multiple_contact(cont,n);
+            break;
+    }       
+    return n;
+}
+
 //modify a contact
 
 void modifier_contact(contact cont[] , int n , char nm[]){
@@ -286,8 +339,10 @@ int supprimer_contact(contact cont[],int n , char nm[]) {
                     }
                     n--;
                 }
+                break;
             case 'N' :
                 print_title("Vouz avez choisir de ne pas supprimer le contact .");
+                break;
         }
     }
     if(c == 'O'){
@@ -309,6 +364,31 @@ void rechercher_contact(contact cont[],int n,char nm[]){
     }
     else {
         print_title("Le contact n'existe pas dans la list !!");
+    }
+}
+
+int partition(contact cont[],int start,int end){
+    contact pivot = cont[end];
+    int i = start - 1;
+    int j=0;
+    for(j=start;j<end;j++){
+        if(strcmp(cont[j].nom,pivot.nom) == -1){
+            i++;
+            contact temp = cont[i];
+            cont[i] = cont[j];
+            cont[j]=temp;
+        }
+    }
+    contact temp = cont[i+1];
+    cont[i+1] = cont[end];
+    cont[end]=temp;
+    return i+1;
+}
+void trier_contact(contact cont[],int start,int end){
+    if(start < end){
+        int pi = partition(cont,start,end);
+        trier_contact(cont,start,pi-1);
+        trier_contact(cont,pi+1,end);
     }
 }
 
@@ -339,8 +419,7 @@ void main_2() {
         switch(choix) {
             case 1 :
                 printf(BLU);
-                print_title("Ajouter un contact");
-                n=ajouter_contact(cont,n);
+                n=fenetre_ajout(cont,n);
                 break;
             case 2 :
                 if(n==0){
@@ -349,6 +428,7 @@ void main_2() {
                     break;
                 }
                 printf(GRN);
+                trier_contact(cont,0,n-1);
                 afficher_contacts(cont,n);
                 break;
             case 3 :
@@ -368,7 +448,7 @@ void main_2() {
             case 5 :
                 printf(CYN);
                 print_title("Suppression d'un element du tableaux");
-                printf("Donner le titre du livre a supprimer : ");
+                printf("Donner le nom du contact a supprimer : ");
 				scanf("%s",nm);
                 n=supprimer_contact(cont,n,nm);
                 break;
